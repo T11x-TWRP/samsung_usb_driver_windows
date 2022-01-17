@@ -1,0 +1,179 @@
+;*****************************************************************************
+;
+; Name:  sscdsdm2.inf
+;
+; Function:
+;	Install the SAMSUNG Mobile Modem Diagnostic Serial Port Drivers (WDM) on Win2000
+;
+; Copyright (c) 1997-2012 MCCI Corporation 
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+; NOTICE: This software is licensed, not sold.  Any modification of this
+; inf file to change the reference to an operating system or to change the
+; reference to a device is not permitted unless authorized in writing by
+; MCCI Corporation
+;
+;*****************************************************************************
+
+[Version]
+signature="$WINDOWS NT$"
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider=%Provider%
+DriverVer=11/30/2012,5.30.14.0
+CatalogFile=sscdserd.cat
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"sscdserd.sys",,\i386
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"sscdserd.sys",,\amd64
+
+
+[SourceDisksFiles]
+; filename = diskid[,[ subdir][, size]]
+sscdserd.sys = 1
+sscdcmnt.sys = 1
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+
+[DestinationDirs]
+DefaultDestDir = 12                    ; system32\drivers
+
+;-----------------------------------------------------------------------------
+; Table of Contents
+;-----------------------------------------------------------------------------
+[Manufacturer]
+%SAMSUNG%=SAMSUNG, NTamd64
+
+;-----------------------------------------------------------------------------
+; Device-by-device entries
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6601&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6640&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6771&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_684B&MI_03&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_684C&MI_03&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C1&MI_02&OS_NT
+
+
+
+[SAMSUNG.NTamd64]
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6601&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6640&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6771&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_684B&MI_03&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_684C&MI_03&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C1&MI_02&OS_NT
+
+
+
+;-----------------------------------------------------------------------------
+; Installation instructions
+;-----------------------------------------------------------------------------
+
+[SAMSUNG.Install.nt]
+AddReg		= SAMSUNG.AddReg,SAMSUNG.NT.AddReg
+CopyFiles	= CopyFiles, CopyFiles.Win2K
+
+
+;-----------------------------------------------------------------------------
+;  Registry
+;-----------------------------------------------------------------------------
+
+; common registry entries 
+[SAMSUNG.AddReg]
+HKR,,EnableCR1146,0x00010001,1
+HKR,,EnableWriteHeuristics, 0x10001, 00,00,00,00
+
+; only for NT...
+[SAMSUNG.NT.AddReg]
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+;-----------------------------------------------------------------------------
+;  Copy lists
+;-----------------------------------------------------------------------------
+[CopyFiles]
+
+[CopyFiles.Win2K]
+sscdserd.sys
+sscdcm.sys,sscdcmnt.sys
+sscdcmnt.sys
+
+
+
+;-----------------------------------------------------------------------------
+;  NT Services installation
+;-----------------------------------------------------------------------------
+
+
+
+[SAMSUNG.Install.NT.Services]
+AddService = sscdserd, 0x00000002, SAMSUNG.Install.AddService, SAMSUNGWdm.Install.EventLog
+
+
+
+
+[SAMSUNG.Install.AddService]
+DisplayName	= %Samsung.Service.Name%
+Description	= %Samsung.Service.Desc%
+ServiceType	= 1			;%SERVICE_KERNEL_DRIVER%
+StartType	= 3			;%SERVICE_DEMAND_START%
+ErrorControl	= 1			;%SERVICE_ERROR_NORMAL%	
+ServiceBinary	= %12%\sscdserd.sys
+
+
+;-----------------------------------------------------------------------------
+;       Event logging support
+;-----------------------------------------------------------------------------
+
+[SAMSUNGWdm.Install.EventLog]
+Addreg = SAMSUNGWdm.EventLog.AddReg
+
+[SAMSUNGWdm.EventLog.AddReg]
+HKR,,EventMessageFile, 0x20000, "%%SystemRoot%%\System32\drivers\sscdserd.sys"
+HKR,,TypesSupported, 0x10001, 7
+
+;-----------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------
+; STRINGS
+;-----------------------------------------------------------------------------
+[Strings]
+
+;<<localize the following>>
+
+;BEGIN ENG - US English Strings
+
+Provider = "SAMSUNG Electronics Co., Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co., Ltd. "
+DiskString = "SAMSUNG Mobile Modem Diagnostic Serial Port Drivers installation disk"
+
+Samsung.Comm.Desc = "SAMSUNG Mobile Modem Diagnostic Serial Port (WDM)"
+Samsung.Service.Name = "SAMSUNG Mobile Modem Diagnostic Serial Port (WDM)"
+Samsung.Service.Desc = "SAMSUNG Mobile Modem Diagnostic Serial Port (WDM)"
+
+
+CustomerDataPath = "SAMSUNG Mobile Modem"
+DriverSet = "SAMSUNG Mobile Modem Driver Set"
+UninstallFile = "SSCDUninstall.exe"
+McciOptions = "Uninstallable"
+
+
+;END ENG - US English Strings
+
+;-----------------------------------------------------------------------------
+; The following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+
+;*** end of file ***

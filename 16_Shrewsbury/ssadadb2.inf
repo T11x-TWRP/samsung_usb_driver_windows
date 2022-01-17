@@ -1,0 +1,126 @@
+;/*++
+;
+;Abstract:
+;    Installation inf for the Android USB Bulk device
+;
+;--*/
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=USB
+ClassGuid={F72FE0D4-CBCB-407d-8814-9ED673D0DD6B}
+Provider=%Provider%
+DriverVer=11/30/2012,5.30.14.0
+CatalogFile=ssadadb.cat
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SamsungUsbClassReg
+
+[SamsungUsbClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssadadb.sys",,\i386
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssadadb.sys",,\amd64
+
+[SourceDisksFiles]
+ssadadb.sys = 1
+
+[DestinationDirs]
+DefaultDestDir = 12
+SAMSUNG.NT.CopyFiles		= 12
+
+; ================= Device section =====================
+
+[Manufacturer]
+%SAMSUNG%=SAMSUNG, NTamd64
+
+[SAMSUNG]
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_681C&MI_03&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6880&MI_02&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6877&MI_03&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689C&MI_00&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689E&MI_04&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_05&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C6&MI_04&OS_NT
+
+[SAMSUNG.NTamd64]
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_681C&MI_03&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6880&MI_02&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6877&MI_03&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689C&MI_00&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689E&MI_04&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_05&OS_NT
+%SAMSUNG.Adb.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C6&MI_04&OS_NT
+
+[SAMSUNG.Install.NT]
+CopyFiles=SAMSUNG.NT.CopyFiles
+
+[SAMSUNG.NT.CopyFiles]
+ssadadb.sys
+WdfCoInstaller01005.dll
+
+[SAMSUNG.Install.NT.Services]
+Addservice = androidusb, 0x00000002, SAMSUNG.AddService
+
+[SAMSUNG.AddService]
+DisplayName    = %SAMSUNG.Adb.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\ssadadb.sys
+AddReg         = SAMSUNG.AddReg
+LoadOrderGroup = Base
+
+[SAMSUNG.AddReg]
+HKR,"Parameters","MaximumTransferSize",0x10001,4096
+HKR,"Parameters","DebugLevel",0x10001,2
+HKR, Parameters\Wdf, VerboseOn,       0x00010001, 1
+HKR, Parameters\Wdf, VerifierOn,      0x00010001, 1
+HKR, Parameters\Wdf, DbgBreakOnError, 0x00010001, 1
+
+;-------------- WDF Coinstaller installation
+[DestinationDirs]
+CoInstaller_CopyFiles = 11
+
+[SAMSUNG.Install.NT.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CoInstaller_CopyFiles]
+WdfCoInstaller01005.dll
+
+[SourceDisksFiles]
+WdfCoInstaller01005.dll=1 ; make sure the number matches with SourceDisksNames
+
+[CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "wdfcoinstaller01005.dll,WdfCoInstaller"
+
+[SAMSUNG.Install.NT.Wdf]
+KmdfService = androidusb, androidusb_wdfsect
+
+[androidusb_wdfsect]
+KmdfLibraryVersion = 1.5
+
+;---------------------------------------------------------------;
+
+[Strings]
+Provider = "SAMSUNG Electronics Co., Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co., Ltd. "
+DiskString = "SAMSUNG Android USB Composite Device Installation Disk"
+
+SAMSUNG.Adb.Desc = "SAMSUNG Android Composite ADB Interface"
+SAMSUNG.Adb.SvcDesc = "SAMSUNG Android Composite ADB Interface Driver"
+ClassName = "ADB Interface"
+
+CustomerDataPath = "SAMSUNG Android USB Modem"
+DriverSet = "SAMSUNG Android USB Modem Software"
+UninstallFile = "SSADUninstall.exe"
+McciOptions = "Uninstallable"

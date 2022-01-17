@@ -1,0 +1,85 @@
+; ===========================================
+; SAMSUNG High Speed CDMA USB Device Driver
+; ===========================================
+; Copyright (c) 2000-2004 MobileTop
+; Release Date. 2009-08-18
+; Ver 2.1.2.0
+; 
+[Version] 
+Signature = "$Windows NT$" 
+Class=USB
+ClassGUID={36fc9e60-c465-11cf-8056-444553540000} 
+Provider=%HSPPROVIDER% 
+CatalogFile=HSPUSB.cat
+DriverVer= 08/18/2009,2.1.2.0
+CatalogFile=HSPUSB.cat
+
+[SourceDisksNames.x86]
+1=%HSP_Usb_DriverDesc%,HSPUSB.sys,,\i386
+
+[SourceDisksNames.amd64]
+1=%HSP_Usb_DriverDesc%,HSPUSB.sys,,\amd64
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[Manufacturer] 
+%HSPPROVIDER%=SAMSUNG,NTAMD64
+
+[SAMSUNG]
+%HSP_Usb_DriverDesc%=HSP_Usb_Driver_Inst.Dev,USB\VID_04E8&PID_9407
+
+[SAMSUNG.NTAMD64]
+%HSP_Usb_DriverDesc%=HSP_Usb_Driver_Inst.Dev,USB\VID_04E8&PID_9407
+
+[HSP_Usb_Driver_Inst.Dev.NT]
+CopyFiles=HSP_Usb_Driver_Inst.Files.Ext
+
+[HSP_Usb_Driver_Inst.Dev.NT.Services]
+Addservice = shspusb, 0x00000002, HSP_Usb_Driver_Inst.AddService
+
+
+[HSP_Usb_Driver_Inst.AddService] 
+DisplayName = %HSP_Usb_DriverDesc.SvcDesc%
+ServiceType = 1 
+StartType = 3 
+ErrorControl = 1 
+ServiceBinary = %12%\HSPUSB.sys 
+
+[HSP_Usb_Driver_Inst.Files.Ext]
+HSPUSB.sys
+
+
+[SourceDisksFiles]
+HSPUSB.sys = 1
+
+;[HSPUSB_Driver_EventLog_Inst] 
+;AddReg = HSPUSB_Driver_EventLog_Inst.AddReg 
+ 
+;[HSPUSB_Driver_EventLog_Inst.AddReg] 
+;HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\IoLogMsg.dll" 
+;HKR,,TypesSupported,%REG_DWORD%,7
+
+
+[Strings] 
+;  *******Localizable Strings******* 
+HSPPROVIDER = "MobileTop"
+Desc_x860= "Samsung High Speed USB Driver disk" 
+HSP_Usb_DriverDesc = "Samsung High Speed USB Driver" 
+HSP_Usb_DriverDesc.SvcDesc    = "Samsung High Speed USB Driver disks"
+;  *******Non Localizable Strings******* 
+
+;SERVICE_BOOT_START = 0x0 
+;SERVICE_SYSTEM_START = 0x1 
+;SERVICE_AUTO_START = 0x2 
+;SERVICE_DEMAND_START = 0x3 
+;SERVICE_DISABLED = 0x4 
+
+;SERVICE_KERNEL_DRIVER = 0x1 
+;SERVICE_ERROR_IGNORE = 0x0 
+;SERVICE_ERROR_NORMAL = 0x1 
+;SERVICE_ERROR_SEVERE = 0x2 
+;SERVICE_ERROR_CRITICAL = 0x3 
+
+;REG_EXPAND_SZ = 0x00020000 
+;REG_DWORD = 0x00010001 

@@ -1,0 +1,183 @@
+;*****************************************************************************
+;
+; Name:  ssadsdm2.inf
+;
+; Function:
+;	Install the SAMSUNG Android USB Diagnostic Serial Port Drivers (WDM) on Win2000
+;
+; Copyright (c) 1997-2012 MCCI Corporation 
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+; NOTICE: This software is licensed, not sold.  Any modification of this
+; inf file to change the reference to an operating system or to change the
+; reference to a device is not permitted unless authorized in writing by
+; MCCI Corporation
+;
+;*****************************************************************************
+
+[Version]
+signature="$WINDOWS NT$"
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider=%Provider%
+DriverVer=11/30/2012,5.30.14.0
+CatalogFile=ssadserd.cat
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssadserd.sys",,\i386
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssadserd.sys",,\amd64
+
+
+[SourceDisksFiles]
+; filename = diskid[,[ subdir][, size]]
+ssadserd.sys = 1
+ssadcmnt.sys = 1
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+
+[DestinationDirs]
+DefaultDestDir = 12                    ; system32\drivers
+
+;-----------------------------------------------------------------------------
+; Table of Contents
+;-----------------------------------------------------------------------------
+[Manufacturer]
+%SAMSUNG%=SAMSUNG, NTamd64
+
+;-----------------------------------------------------------------------------
+; Device-by-device entries
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689E&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C6&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C8&MI_02&OS_NT
+%Samsung.Comm.TTYGS1.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_02&OS_NT
+%Samsung.Comm.TTYGS2.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_03&OS_NT
+%Samsung.Comm.TTYGS1.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C4&MI_02&OS_NT
+%Samsung.Comm.TTYGS2.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C4&MI_03&OS_NT
+
+
+
+[SAMSUNG.NTamd64]
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_689E&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C6&MI_02&OS_NT
+%Samsung.Comm.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C8&MI_02&OS_NT
+%Samsung.Comm.TTYGS1.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_02&OS_NT
+%Samsung.Comm.TTYGS2.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C3&MI_03&OS_NT
+%Samsung.Comm.TTYGS1.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C4&MI_02&OS_NT
+%Samsung.Comm.TTYGS2.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_68C4&MI_03&OS_NT
+
+
+
+;-----------------------------------------------------------------------------
+; Installation instructions
+;-----------------------------------------------------------------------------
+
+[SAMSUNG.Install.nt]
+AddReg		= SAMSUNG.AddReg,SAMSUNG.NT.AddReg
+CopyFiles	= CopyFiles, CopyFiles.Win2K
+
+
+;-----------------------------------------------------------------------------
+;  Registry
+;-----------------------------------------------------------------------------
+
+; common registry entries 
+[SAMSUNG.AddReg]
+HKR,,EnableCR1146,0x00010001,1
+HKR,,EnableWriteHeuristics, 0x10001, 02,00,00,00
+
+; only for NT...
+[SAMSUNG.NT.AddReg]
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+;-----------------------------------------------------------------------------
+;  Copy lists
+;-----------------------------------------------------------------------------
+[CopyFiles]
+
+[CopyFiles.Win2K]
+ssadserd.sys
+ssadcm.sys,ssadcmnt.sys
+ssadcmnt.sys
+
+
+
+;-----------------------------------------------------------------------------
+;  NT Services installation
+;-----------------------------------------------------------------------------
+
+
+
+[SAMSUNG.Install.NT.Services]
+AddService = ssadserd, 0x00000002, SAMSUNG.Install.AddService, SAMSUNGWdm.Install.EventLog
+
+
+
+
+[SAMSUNG.Install.AddService]
+DisplayName	= %Samsung.Service.Name%
+Description	= %Samsung.Service.Desc%
+ServiceType	= 1			;%SERVICE_KERNEL_DRIVER%
+StartType	= 3			;%SERVICE_DEMAND_START%
+ErrorControl	= 1			;%SERVICE_ERROR_NORMAL%	
+ServiceBinary	= %12%\ssadserd.sys
+
+
+;-----------------------------------------------------------------------------
+;       Event logging support
+;-----------------------------------------------------------------------------
+
+[SAMSUNGWdm.Install.EventLog]
+Addreg = SAMSUNGWdm.EventLog.AddReg
+
+[SAMSUNGWdm.EventLog.AddReg]
+HKR,,EventMessageFile, 0x20000, "%%SystemRoot%%\System32\drivers\ssadserd.sys"
+HKR,,TypesSupported, 0x10001, 7
+
+;-----------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------
+; STRINGS
+;-----------------------------------------------------------------------------
+[Strings]
+
+;<<localize the following>>
+
+;BEGIN ENG - US English Strings
+
+Provider = "SAMSUNG Electronics Co., Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co., Ltd. "
+DiskString = "SAMSUNG Android USB Diagnostic Serial Port Drivers installation disk"
+
+Samsung.Comm.Desc = "SAMSUNG Android USB Diagnostic Serial Port (WDM)"
+Samsung.Service.Name = "SAMSUNG Android USB Diagnostic Serial Port (WDM)"
+Samsung.Service.Desc = "SAMSUNG Android USB Diagnostic Serial Port (WDM)"
+
+
+Samsung.Comm.TTYGS1.Desc = "SAMSUNG Android USB Diagnostic Serial Port (WMC)"
+Samsung.Comm.TTYGS2.Desc = "SAMSUNG Android USB Diagnostic Serial Port (DM)"
+CustomerDataPath = "SAMSUNG Android USB Modem"
+DriverSet = "SAMSUNG Android USB Modem Software"
+UninstallFile = "SSADUninstall.exe"
+McciOptions = "Uninstallable"
+
+
+;END ENG - US English Strings
+
+;-----------------------------------------------------------------------------
+; The following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+
+;*** end of file ***

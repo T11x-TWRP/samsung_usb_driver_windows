@@ -1,0 +1,138 @@
+;*****************************************************************************
+; 
+; Name: ssdudfu.inf
+;
+; Function:
+;	Install SAMSUNG Mobile USB DFU2 Device
+;
+; Copyright (c) 1997-2011 MCCI Corporation
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+;*****************************************************************************
+
+[Version]
+signature="$WINDOWS NT$"
+Class=USB
+ClassGuid={36fc9e60-c465-11cf-8056-444553540000}
+Provider=%Provider%
+DriverVer=06/01/2011,5.28.6.0
+CatalogFile=ssdudfu.cat
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir = 11     ; LDID_SYS
+CopyList.sys.NT = 12
+
+;-----------------------------------------------------------------------------
+; Specify the install disks.
+;-----------------------------------------------------------------------------
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskDescription%, "ssdudfu.sys",,\i386
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskDescription%, "ssdudfu.sys",,\amd64
+
+[SourceDisksFiles]
+; filename = diskid[,[ subdir][, size]]
+ssdudfu.sys = 1, ,
+ssduwhnt.sys = 1, ,
+
+;-----------------------------------------------------------------------------
+; Table of Contents:  manufacturer, then devices.
+;-----------------------------------------------------------------------------
+; Table of Contents
+[Manufacturer]
+%Mfg%=SAMSUNG, NTamd64
+
+;-----------------------------------------------------------------------------
+; The devices
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%ProductDesc% = Install, USB\VID_04CC&PID_2B0A
+%ProductDesc% = Install, USB\VID_04CC&PID_2B0B
+%ProductDesc% = Install, USB\VID_04CC&PID_2257
+
+[SAMSUNG.NTamd64]
+%ProductDesc% = Install, USB\VID_04CC&PID_2B0A
+%ProductDesc% = Install, USB\VID_04CC&PID_2B0B
+%ProductDesc% = Install, USB\VID_04CC&PID_2257
+
+;-----------------------------------------------------------------------------
+;       How to install the driver
+;-----------------------------------------------------------------------------
+
+[Install.NT]
+CopyFiles       = CopyList.sys.NT
+AddReg          = AddReg.NT,AddReg
+
+;-----------------------------------------------------------------------------
+;       How to start the WDM driver on NT
+;-----------------------------------------------------------------------------
+[Install.NT.Services]
+AddService = ssdudfu, 0x00000002, Install.AddService
+
+[Install.AddService]
+DisplayName     = %SvcDesc%
+ServiceType     = 1                     ;SERVICE_KERNEL_DRIVER
+StartType       = 3                     ;SERVICE_DEMAND_START
+ErrorControl    = 1                     ;SERVICE_ERROR_NORMAL
+ServiceBinary   = %12%\ssdudfu.sys
+
+;-----------------------------------------------------------------------------
+;       Registry entries
+;-----------------------------------------------------------------------------
+[AddReg]
+HKR,,NTMPDriver,,ssdudfu.sys
+HKR,,DriverTypeGuid,,{1DE6420E-AAA7-46e6-905B-F088C8064660}	;generic
+HKR,,DeviceGuid,,{E20A2820-439B-4593-B366-13DE46FED964}
+
+
+
+[AddReg.NT]
+
+;-----------------------------------------------------------------------------
+;       Copy lists
+;-----------------------------------------------------------------------------
+
+; these are different so things go to a different place
+[CopyList.sys.NT]
+ssdudfu.sys
+ssduwh.sys,ssduwhnt.sys
+
+;-----------------------------------------------------------------------------
+; STRINGS
+;-----------------------------------------------------------------------------
+[Strings]
+
+;BEGIN ENG - US English Strings
+
+Provider = "SAMSUNG Electronics Co.,Ltd."
+Mfg = "SAMSUNG Electronics Co.,Ltd."
+DiskDescription = "SAMSUNG Mobile USB DFU2 Device installation disk"
+
+ProductDesc = "SAMSUNG Mobile USB DFU2 Device"
+SvcDesc = "SAMSUNG Mobile USB DFU2 Device"
+
+CustomerDataPath = "SAMSUNG Mobile USB Download Driver"
+DriverSet = "SAMSUNG Mobile USB Download Driver Software"
+UninstallFile = "SSDUUninstall.exe"
+McciOptions = "Uninstallable"
+
+
+;END ENG - US English Strings
+
+
+;-----------------------------------------------------------------------------
+; The following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+
+;*** end of file ***

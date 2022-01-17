@@ -1,0 +1,172 @@
+;*****************************************************************************
+;
+; Name:  ssm_ser2.inf
+;
+; Function:
+;	Install the SAMSUNG Mobile USB Port II 1.0 Drivers (WDM) on Win2000/XP
+;
+; Copyright (c) 1997-2009 MCCI Corporation 
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+; NOTICE: This software is licensed, not sold.  Any modification of this
+; inf file to change the reference to an operating system or to change the
+; reference to a device is not permitted unless authorized in writing by
+; MCCI Corporation
+;
+;*****************************************************************************
+
+[Version]
+signature="$WINDOWS NT$"
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider=%Provider%
+DriverVer=11/25/2009,5.12.0.0
+CatalogFile=ssm_mdm.cat
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssm_mdm.sys",,\i386
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"ssm_mdm.sys",,\amd64
+
+
+[SourceDisksFiles]
+; filename = diskid[,[ subdir][, size]]
+ssm_mdm.sys = 1
+ssm_cmnt.sys = 1
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+
+[DestinationDirs]
+DefaultDestDir = 12                    ; system32\drivers
+
+;-----------------------------------------------------------------------------
+; Table of Contents
+;-----------------------------------------------------------------------------
+[Manufacturer]
+%SAMSUNG%=SAMSUNG, NTamd64
+
+;-----------------------------------------------------------------------------
+; Device-by-device entries
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_663F&Class_02&SubClass_02&Prot_FF&OS_NT
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_6843&Class_02&SubClass_02&Prot_FF&OS_NT
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_6844&Class_02&SubClass_02&Prot_FF&OS_NT
+
+[SAMSUNG.NTamd64]
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_663F&Class_02&SubClass_02&Prot_FF&OS_NT
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_6843&Class_02&SubClass_02&Prot_FF&OS_NT
+%Samsung.Comm.Desc% = Samsung.Install, USB\VID_04E8&PID_6844&Class_02&SubClass_02&Prot_FF&OS_NT
+
+;-----------------------------------------------------------------------------
+; Installation instructions
+;-----------------------------------------------------------------------------
+
+[Samsung.Install.nt]
+AddReg		= Samsung.AddReg,Samsung.NT.AddReg
+CopyFiles	= CopyFiles, CopyFiles.Win2K
+
+
+;-----------------------------------------------------------------------------
+;  Registry
+;-----------------------------------------------------------------------------
+
+; common registry entries 
+[Samsung.AddReg]
+HKR,,NTMPDriver,,ssm_mdm.sys
+HKR,,EnableSetClearFeatureIdle, 0x10001, 01,00,00,00
+HKR,,OverrideDefaultPortSettings, 0x10001, 01,00,00,00
+HKR,,InitialBaudRate, 0x10001, 00,C2,01,00			;115200 initial baud rate
+HKR,,InitialLineControl,, "8N1"					;8-bits, No parity, 1 stop bit
+
+; only for NT...
+[Samsung.NT.AddReg]
+HKR,,PortSubClass,1,01
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+;-----------------------------------------------------------------------------
+;  Copy lists
+;-----------------------------------------------------------------------------
+[CopyFiles]
+
+[CopyFiles.Win2K]
+ssm_mdm.sys
+ssm_cm.sys,ssm_cmnt.sys
+ssm_cmnt.sys
+
+
+
+;-----------------------------------------------------------------------------
+;  NT Services installation
+;-----------------------------------------------------------------------------
+
+
+
+[Samsung.Install.NT.Services]
+AddService = ssm_mdm, 0x00000002, Samsung.Install.AddService, SamsungWdm.Install.EventLog
+
+
+
+
+[Samsung.Install.AddService]
+DisplayName	= %Samsung.Service.Name%
+Description	= %Samsung.Service.Desc%
+ServiceType	= 1			;%SERVICE_KERNEL_DRIVER%
+StartType	= 3			;%SERVICE_DEMAND_START%
+ErrorControl	= 1			;%SERVICE_ERROR_NORMAL%	
+ServiceBinary	= %12%\ssm_mdm.sys
+
+
+;-----------------------------------------------------------------------------
+;       Event logging support
+;-----------------------------------------------------------------------------
+
+[SamsungWdm.Install.EventLog]
+Addreg = SamsungWdm.EventLog.AddReg
+
+[SamsungWdm.EventLog.AddReg]
+HKR,,EventMessageFile, 0x20000, "%%SystemRoot%%\System32\drivers\ssm_mdm.sys"
+HKR,,TypesSupported, 0x10001, 7
+
+;-----------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------
+; STRINGS
+;-----------------------------------------------------------------------------
+[Strings]
+
+;<<localize the following>>
+
+;BEGIN ENG - US English Strings
+
+Provider = "SAMSUNG Electronics Co.,Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co.,Ltd. "
+DiskString = "SAMSUNG Mobile USB Port II 1.0 Drivers"
+
+Samsung.Comm.Desc = "SAMSUNG Mobile USB Port"
+Samsung.Service.Name = "SAMSUNG Mobile USB Port II 1.0 Drivers"
+Samsung.Service.Desc = "SAMSUNG Mobile USB Port II 1.0 Drivers"
+
+
+CustomerDataPath = "SAMSUNG Mobile USB Modem"
+DriverSet = "SAMSUNG Mobile USB Modem Software"
+UninstallFile = "SSM_Uninstall.exe"
+McciOptions = "Uninstallable"
+
+;END ENG - US English Strings
+
+;-----------------------------------------------------------------------------
+; The following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+
+;*** end of file ***

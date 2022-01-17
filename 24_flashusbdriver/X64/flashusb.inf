@@ -1,0 +1,179 @@
+;******************************************************************************
+;**                                                                          **
+;**                            INTEL CONFIDENTIAL                            **
+;**                                                                          **
+;**  The material contained or described herein and all documents related    **
+;**  to such material ("Material") are owned by Intel Corporation or its     **
+;**  suppliers or licensors. Title to the Material remains with Intel        **
+;**  Corporation or its suppliers and licensors. The Material contains trade **
+;**  secrets and proprietary and confidential information of Intel or its    **
+;**  suppliers and licensors. The Material is protected by worldwide         **
+;**  copyright and trade secret laws and treaty provisions. No part of the   **
+;**  Material may be used, copied, reproduced, modified, published,          **
+;**  uploaded, posted, transmitted, distributed, or disclosed in any way     **
+;**  without Intel’s prior express written permission.                       **
+;**                                                                          **
+;**  No license under any patent, copyright, trade secret or other           **
+;**  intellectual property right is granted to or conferred upon you by      **
+;**  disclosure or delivery of the Materials, either expressly, by           **
+;**  implication, inducement, estoppel or otherwise. Any license under such  **
+;**  intellectual property rights must be express and approved by Intel in   **
+;**  writing.                                                                **
+;**                                                                          **
+;******************************************************************************
+
+;******************************************************************************
+;**                                                                          **
+;** flashusb.inf (Intel 64 bit platforms)                                **
+;**                                                                          **
+;** Intel(R) USB Flash Loader utility                                        **
+;**                                                                          **
+;******************************************************************************
+
+[Version]
+Signature="$Windows NT$"
+Class=USB
+ClassGUID={36FC9E60-C465-11CF-8056-444553540000}
+provider=%IMC%
+DriverVer= 02/27/2013,1.0.1.1
+CatalogFile=flashusb.cat
+
+[SourceDisksNames]
+1=%FlashUSB.InstallName%,,,
+
+[DestinationDirs]
+FlashUSB.sys.Copy = 12
+
+
+[SourceDisksFiles]
+FlashUsb.sys = 1
+
+
+[Manufacturer]
+%IMC%=IMC_FLASH,ntamd64
+
+
+;****************************************************************************
+; Exclude from select the USB device -- it should be auto-detected!
+;****************************************************************************
+
+[ControlFlags]
+ExcludeFromSelect     = USB\Vid_058b&Pid_0015
+ExcludeFromSelect     = USB\Vid_058b&Pid_0041
+ExcludeFromSelect     = USB\Vid_8087&Pid_0706
+ExcludeFromSelect     = USB\Vid_8087&Pid_0716
+ExcludeFromSelect     = USB\Vid_8087&Pid_0736
+ExcludeFromSelect     = USB\Vid_8087&Pid_07EC
+ExcludeFromSelect     = USB\Vid_8087&Pid_07ED
+ExcludeFromSelect     = USB\Vid_8087&Pid_07EE
+ExcludeFromSelect     = USB\Vid_8087&Pid_07EF
+
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F0
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F1
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F2
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F3
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F4
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F5
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F6
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F7
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F8
+ExcludeFromSelect     = USB\Vid_8087&Pid_07F9
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FA
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FB
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FC
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FD
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FE
+ExcludeFromSelect     = USB\Vid_8087&Pid_07FF
+
+ExcludeFromSelect     = USB\Vid_8087&Pid_0800
+ExcludeFromSelect     = USB\Vid_8087&Pid_0801
+ExcludeFromSelect     = USB\Vid_8087&Pid_0802
+ExcludeFromSelect     = USB\Vid_8087&Pid_0803
+ExcludeFromSelect     = USB\Vid_8087&Pid_0804
+ExcludeFromSelect     = USB\Vid_8087&Pid_0805
+ExcludeFromSelect     = USB\Vid_8087&Pid_0806
+ExcludeFromSelect     = USB\Vid_8087&Pid_0807
+ExcludeFromSelect     = USB\Vid_8087&Pid_0808
+ExcludeFromSelect     = USB\Vid_8087&Pid_0809
+ExcludeFromSelect     = USB\Vid_8087&Pid_080A
+ExcludeFromSelect     = USB\Vid_8087&Pid_080B
+ExcludeFromSelect     = USB\Vid_8087&Pid_080C
+ExcludeFromSelect     = USB\Vid_8087&Pid_080D
+ExcludeFromSelect     = USB\Vid_8087&Pid_080E
+ExcludeFromSelect     = USB\Vid_8087&Pid_080F
+
+
+[IMC_FLASH.ntamd64]
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_058b&Pid_0015
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_058b&Pid_0041
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0706
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0716
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0736
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07EC
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07ED
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07EE
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07EF
+
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F0
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F1
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F2
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F3
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F4
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F5
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F6
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F7
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F8
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07F9
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FA
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FB
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FC
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FD
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FE
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_07FF
+
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0800
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0801
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0802
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0803
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0804
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0805
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0806
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0807
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0808
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_0809
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080A
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080B
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080C
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080D
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080E
+%FlashUSB.DevName%=FlashUSB.amd64, USB\Vid_8087&Pid_080F
+
+
+[FlashUSB.amd64]
+CopyFiles=FlashUSB.sys.Copy
+
+
+[FlashUSB.amd64.Services]
+Addservice = FlashUSB, 0x00000002, FlashUSB.AddService
+
+[FlashUSB.AddService]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\FlashUSB.sys
+AddReg=FlashUSB.AddReg
+
+[FlashUSB.AddReg]
+HKR,Parameters,MaximumTransferSize,0x10001,32768
+HKR,Parameters,DebugLevel,0x10001,0
+
+
+[FlashUSB.sys.copy]
+FlashUSB.sys
+
+;---------------------------------------------------------------;
+
+[Strings]
+IMC="Intel Mobile Communications"
+FlashUSB.DevName="Intel(R) USB Flash Loader utility"
+FlashUSB.InstallName="Intel(R) USB Flash Loader utility - driver Installation Disk"

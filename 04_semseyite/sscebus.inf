@@ -1,0 +1,202 @@
+;*****************************************************************************
+;
+; sscebus.inf   -- Install the SAMSUNG USB Composite Device V2 drivers
+;
+; Copyright (c) 1997-2012 by MCCI Corporation 
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+; NOTICE: This software is licensed, not sold.  Any modification of this
+; inf file to change the reference to an operating system or to change the
+; reference to a device is not permitted unless authorized in writing by
+; MCCI Corporation.
+;
+;*****************************************************************************
+
+[version]
+signature="$WINDOWS NT$"
+Class=USB
+ClassGuid={36FC9E60-c465-11cf-8056-444553540000}
+Provider=%Provider%
+DriverVer=11/30/2012,5.30.14.0
+CatalogFile=sscebus.cat
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir                  = 11                    ; LDID_SYS
+SAMSUNGWdm.NT.CopyFiles        = 12                    ; system32\drivers
+PropPages.CopyFiles             = 11                    ; system
+
+;-----------------------------------------------------------------------------
+; Specify the install disks.  A bit unwieldy during development.
+;-----------------------------------------------------------------------------
+[SourceDisksNames.x86]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"sscebus.sys",,\i386
+
+
+[SourceDisksNames.amd64]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+1=%DiskString%,"sscebus.sys",,\amd64
+
+
+
+[SourceDisksFiles]
+; filename = diskid[, [subdir] [, size]]
+sscebus.sys = 1
+sscewhnt.sys = 1
+
+;-----------------------------------------------------------------------------
+; Table of Contents:  manufacturer, then devices.
+;-----------------------------------------------------------------------------
+[Manufacturer]
+%SAMSUNG%=SAMSUNG, NTamd64
+
+;-----------------------------------------------------------------------------
+; The devices
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6810
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6811
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6812
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6813
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6814
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_684D
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install.2, USB\VID_04E8&PID_684E
+
+[SAMSUNG.NTamd64]
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6810
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6811
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6812
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6813
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_6814
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install, USB\VID_04E8&PID_684D
+%SAMSUNG.CdcBus.Desc% = SAMSUNGWdm.Install.2, USB\VID_04E8&PID_684E
+
+;-----------------------------------------------------------------------------
+; How to install them:  
+; On NT, the system first tries [section.NT], then [section].
+;-----------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------
+; Diagnostics Files CopyFiles List Section
+;-----------------------------------------------------------------------------
+[SAMSUNG.CopyFiles]
+
+;-----------------------------------------------------------------------------
+; XXX when we have a property page DLL, add it to the following section.
+;-----------------------------------------------------------------------------
+[PropPages.CopyFiles]
+
+
+;-----------------------------------------------------------------------------
+;       How to install the WDM driver on NT
+;-----------------------------------------------------------------------------
+[SAMSUNGWdm.Install.NT]
+CopyFiles       = SAMSUNGWdm.NT.CopyFiles
+AddReg          = SAMSUNGWdm.AddReg, SAMSUNGWdm.NT.AddReg
+
+;-----------------------------------------------------------------------------
+;       How to start the WDM driver on NT
+;-----------------------------------------------------------------------------
+
+
+[SAMSUNGWdm.Install.NT.Services]
+AddService      = sscebus, 2, SAMSUNGWdm.AddService, SAMSUNGWdm.Install.EventLog
+
+[SAMSUNGWdm.AddService]
+DisplayName             = %SAMSUNG.Service.Desc%
+ServiceType             = 1     ; SERVICE_KERNEL_DRIVER
+StartType               = 3     ; SERVICE_DEMAND_START
+ErrorControl            = 1     ; SERVICE_ERROR_NORMAL
+ServiceBinary           = %12%\sscebus.sys
+LoadOrderGroup          = Base
+
+;-----------------------------------------------------------------------------
+;       Setup event logging, if driver supports it
+;-----------------------------------------------------------------------------
+
+[SAMSUNGWdm.Install.EventLog]
+Addreg = SAMSUNGWdm.EventLog.AddReg
+
+[SAMSUNGWdm.EventLog.AddReg]
+HKR,,EventMessageFile, 0x20000, "%%SystemRoot%%\System32\drivers\sscebus.sys"
+HKR,,TypesSupported, 0x10001, 7
+
+
+;-----------------------------------------------------------------------------
+;       WDM registry entries (all platforms)
+;-----------------------------------------------------------------------------
+[SAMSUNGWdm.AddReg]
+
+HKR,,MultipleInstancePolicy, 0x10001, 01, 00, 00, 00
+
+
+;-----------------------------------------------------------------------------
+;       WDM registry entries (NT only)
+;-----------------------------------------------------------------------------
+[SAMSUNGWdm.NT.AddReg]
+
+
+;-----------------------------------------------------------------------------
+;       The WDM copy list for NT -- different because things go in
+;       different places.
+;-----------------------------------------------------------------------------
+[SAMSUNGWdm.NT.CopyFiles]
+sscebus.sys
+sscewh.sys,sscewhnt.sys
+sscewhnt.sys
+
+;-----------------------------------------------------------------------------
+; MTP on Interface #2 for Composite Device				      
+;-----------------------------------------------------------------------------
+[SAMSUNGWdm.Install.2.NT]
+CopyFiles       = SAMSUNGWdm.NT.CopyFiles
+AddReg          = SAMSUNGWdm.AddReg.2, SAMSUNGWdm.NT.AddReg
+
+[SAMSUNGWdm.Install.2.NT.Services]
+AddService      = sscebus, 2, SAMSUNGWdm.AddService, SAMSUNGWdm.Install.EventLog
+
+[SAMSUNGWdm.AddReg.2]
+; set the second configuration
+HKR,,MultipleInstancePolicy,0x10001,01,00,00,00
+HKR,Scenarios,Scenario,0x10001, 01,00,00,00
+HKR,Scenarios\Scenario_1\ifc_02\Description, default,, "MTP function"
+HKR,Scenarios\Scenario_1\ifc_02,HardwareId,, "USB\Vid_$VID&Pid_$PID&Mi_$IFC$,"
+HKR,Scenarios\Scenario_1\ifc_02,HardwareIdList,, "USB\MS_COMP_MTP$,USB\Vid_$VID&Pid_$PID&Class_$CLASS&SubClass_$SUBCLASS&Prot_$PROT&Os_$OS$,USB\Vid_$VID&Pid_$PID&Class_$CLASS&SubClass_$SUBCLASS&Prot_$PROT$,USB\Vid_$VID&Pid_$PID&Mi_$IFC&Os_$OS$,USB\Vid_$VID&Pid_$PID&MI_$IFC$,$,"
+HKR,Scenarios\Scenario_1\ifc_02,CompatibleIdList,, "USB\MS_COMP_MTP$,USB\Vid_$VID&Pid_$PID&Mi_$IFC&Os_$OS$,USB\Vid_$VID&Pid_$PID&Mi_$IFC$,$,"
+
+;-----------------------------------------------------------------------------
+
+
+;****************************************************************************
+; Localizable Strings
+;****************************************************************************
+[strings]
+
+;BEGIN ENG - US English Strings
+Provider = "SAMSUNG Electronics Co., Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co., Ltd. "
+DiskString = "SAMSUNG USB Composite Device V2 Installation disk"
+
+SAMSUNG.CdcBus.Desc = "SAMSUNG USB Composite Device V2"
+SAMSUNG.Service.Desc = "SAMSUNG USB Composite Device V2 driver (WDM)"
+
+CustomerDataPath = "SAMSUNG Mobile Modem V2"
+DriverSet = "SAMSUNG Mobile Modem V2 Software"
+UninstallFile = "SSCEUninstall.exe"
+McciOptions = "Uninstallable"
+
+
+;END ENG - US English Strings
+
+;-----------------------------------------------------------------------------
+; Following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+;*** end of file ***

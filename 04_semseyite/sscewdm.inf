@@ -1,0 +1,150 @@
+;*****************************************************************************
+;
+; Name:  sscewdm.inf
+;
+; Function:
+;	Install the SAMSUNG Mobile Modem V2 (WDM) on Win9x
+;
+; Copyright (c) 1997-2009 MCCI Corporation 
+;
+; MCCI is a registered trademark of MCCI Corporation.
+;
+; NOTICE: This software is licensed, not sold.  Any modification of this
+; inf file to change the reference to an operating system or to change the
+; reference to a device is not permitted unless authorized in writing by
+; MCCI Corporation.
+;
+;*****************************************************************************
+
+[Version]
+signature="$CHICAGO$"
+Class=USB
+ClassGuid={36FC9E60-c465-11cf-8056-444553540000}
+Provider=%Provider%
+DriverVer=05/13/2009,4.50.7.0
+;CatalogFile=sscemdm.cat
+
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+;-----------------------------------------------------------------------------
+;   Change A:\ to source drive (or omit to always (?) be prompted)
+;-----------------------------------------------------------------------------
+[SourceDisksNames]
+; diskid = description[, [tagfile] [, <unused>, subdir]]
+;	having the tagfile non-null seems to help...
+1=%DiskString%,"sscemdm.sys",,\i386
+
+[SourceDisksFiles]
+; filename = diskid[,[ subdir][, size]]
+sscemdm.sys = 1
+sscecr.sys = 1
+sscevcr.vxd = 1
+sscecm95.sys = 1
+sscecmnt.sys = 1
+sscecomm.vxd = 1
+sscevcd.vxd = 1
+
+;-----------------------------------------------------------------------------
+; Specify target paths...
+;-----------------------------------------------------------------------------
+[DestinationDirs]
+DefaultDestDir          = 11                    ; LDID_SYS
+
+;-----------------------------------------------------------------------------
+; Table of Contents
+;-----------------------------------------------------------------------------
+[Manufacturer]
+%SAMSUNG%=SAMSUNG
+
+;-----------------------------------------------------------------------------
+; Device-by-device entries
+;-----------------------------------------------------------------------------
+[SAMSUNG]
+%Samsung.Modem.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6810&MI_00&OS_9X
+%Samsung.Modem.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6811&MI_00&OS_9X
+%Samsung.Modem.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6812&MI_00&OS_9X
+%Samsung.Modem.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6813&MI_00&OS_9X
+%Samsung.Modem.Desc% = SAMSUNG.Install, USB\VID_04E8&PID_6814&MI_00&OS_9X
+
+
+;-----------------------------------------------------------------------------
+; Installation instructions
+;-----------------------------------------------------------------------------
+
+[SAMSUNG.Install]
+AddReg		= SAMSUNG.AddReg,SAMSUNG.W95.AddReg,SAMSUNG.W95.AddReg.CRGuid
+CopyFiles	= CopyFiles, CopyFiles.W95, CopyFiles.sys, CopyFiles.W95.sys
+
+
+;-----------------------------------------------------------------------------
+;  Registry
+;-----------------------------------------------------------------------------
+
+; common registry entries 
+[SAMSUNG.AddReg]
+HKR,,NTMPDriver,,sscemdm.sys
+HKR,,CRUpperDescription,,%UpperDescription%
+HKR,,EnableCR1147, 0x10001, 01,00,00,00
+HKR,,EnableCR3329, 0x10001, 01,00,00,00
+HKR,,EnableWriteHeuristics, 0x10001, 02,00,00,00
+
+; only for Win95....
+[SAMSUNG.W95.AddReg]
+HKR,,DevLoader,,*ntkern
+
+[SAMSUNG.W95.Addreg.CRGuid]
+HKR,,CRGuid,,{A0C4AA4B-25B9-40b4-95DE-BA1C9612AABE}
+
+;-----------------------------------------------------------------------------
+;  Copy lists
+;-----------------------------------------------------------------------------
+[CopyFiles]
+
+[CopyFiles.W95]
+sscevcr.vxd
+sscecomm.vxd
+sscevcd.vxd
+
+[CopyFiles.sys]
+sscemdm.sys
+sscecr.sys
+
+[CopyFiles.W95.sys]
+sscecm.sys,sscecm95.sys
+sscecm95.sys
+sscecmnt.sys
+
+[Copyfiles.W95.inf]
+
+
+
+;-----------------------------------------------------------------------------
+; STRINGS
+;-----------------------------------------------------------------------------
+[Strings]
+
+;BEGIN ENG - US English Strings
+Provider = "SAMSUNG Electronics Co., Ltd. "
+SAMSUNG = "SAMSUNG Electronics Co., Ltd. "
+DiskString = "SAMSUNG Mobile Modem V2 Drivers"
+
+Samsung.Modem.Desc = "SAMSUNG Mobile Modem V2"
+UpperDescription = "SAMSUNG Mobile Modem V2"
+
+CustomerDataPath = "SAMSUNG Mobile Modem V2"
+DriverSet = "SAMSUNG Mobile Modem V2 Software"
+UninstallFile = "SSCEUninstall.exe"
+McciOptions = "Uninstallable NotInstallOnWinVer5"
+
+
+;END ENG - US English Strings
+
+
+;-----------------------------------------------------------------------------
+; The following are symbolic constants which don't change per locale.
+;-----------------------------------------------------------------------------
+
+
+;*** end of file ***
